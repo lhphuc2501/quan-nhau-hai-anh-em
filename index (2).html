@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quán Nhậu Hai Anh Em</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f0f0f0; margin:0; padding:0;}
+header { background:#ff7043; color:white; display:flex; align-items:center; justify-content:center; padding:15px;}
+header img { height:50px; margin-right:15px; border-radius:10px;}
+header h1 { margin:0; font-size:24px; }
+.intro { text-align:center; padding:15px; color:#333;}
+.filter { text-align:center; margin-bottom:15px;}
+.filter button { margin:5px; padding:8px 14px; border:none; border-radius:8px; background:#ff7043; color:white; cursor:pointer; font-weight:bold;}
+.filter button:hover { background:#ff5722;}
+.menu-section { display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:20px; padding:20px;}
+.menu-item { background:white; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1); overflow:hidden; transition: transform 0.2s;}
+.menu-item:hover { transform: scale(1.05);}
+.menu-item img { width:100%; height:150px; object-fit:cover;}
+.menu-item h3 { margin:10px 0 5px 10px; font-size:18px; }
+.menu-item p { margin:5px 10px; color:#555; }
+.menu-item button { margin:10px; background:#ff7043; color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; width:calc(100% - 20px);}
+.menu-item button:hover { background:#ff5722;}
+.cart { position:fixed; top:20px; right:20px; background:white; padding:15px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.2); width:250px; max-height:80vh; overflow:auto;}
+.cart h3 { margin-top:0; text-align:center;}
+.cart-item { display:flex; justify-content:space-between; margin-bottom:8px;}
+.cart-item button { background:red; padding:2px 6px; border-radius:5px; font-size:12px; }
+.total { font-weight:bold; margin-top:10px; text-align:right;}
+</style>
+</head>
+<body>
+<header>
+<img src="images/logo.png" alt="Logo Quán">
+<h1>Quán Nhậu Hai Anh Em</h1>
+</header>
+<div class="intro">
+<p>Chào mừng bạn đến quán nhậu Hai Anh Em! Chúng tôi phục vụ các món nhậu Việt – Thái – Trung cùng nước uống mát lạnh. Chọn món và nhấn "Oder" để gọi ngay.</p>
+</div>
+<div class="filter">
+<button onclick="filterMenu('all')">Tất cả</button>
+<button onclick="filterMenu('viet')">Món Việt</button>
+<button onclick="filterMenu('thai')">Món Thái</button>
+<button onclick="filterMenu('trung')">Món Trung</button>
+<button onclick="filterMenu('drink')">Nước uống</button>
+</div>
+<div class="menu-section" id="menu"></div>
+<div class="cart" id="cart">
+<h3>Giỏ hàng</h3>
+<div id="cart-items"></div>
+<p class="total" id="cart-total">Tổng: 0k</p>
+</div>
+<script>
+const allMenu = [/* menu items điền ở trên */];
+let cart = [];
+function showMenu(menuItems){ const container = document.getElementById("menu"); container.innerHTML = ""; menuItems.forEach(item => { const div = document.createElement("div"); div.className="menu-item"; div.innerHTML=`<img src="${item.img}" alt="${item.name}"><h3>${item.name}</h3><p>Giá: ${item.price}k</p><button onclick="addToCart('${item.name}',${item.price})">Oder</button>`; container.appendChild(div); }); }
+function filterMenu(type){ if(type==="all"){ showMenu(allMenu); } else{ showMenu(allMenu.filter(item=>item.type===type)); } }
+function addToCart(name, price){ const exist = cart.find(i=>i.name===name); if(exist){ exist.qty +=1; } else{ cart.push({name:name, price:price, qty:1}); } updateCart(); }
+function removeFromCart(name){ cart = cart.filter(i=>i.name!==name); updateCart(); }
+function updateCart(){ const container = document.getElementById("cart-items"); container.innerHTML=""; let total=0; cart.forEach(item=>{ total += item.price * item.qty; const div = document.createElement("div"); div.className="cart-item"; div.innerHTML=`<span>${item.name} x${item.qty}</span><span>${item.price*item.qty}k <button onclick="removeFromCart('${item.name}')">X</button></span>`; container.appendChild(div); }); document.getElementById("cart-total").innerText=`Tổng: ${total}k`; }
+showMenu(allMenu);
+</script>
+</body>
+</html>
